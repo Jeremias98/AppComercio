@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "734375643835",
+    "firebase_url": "https://vivero-6bd68.firebaseio.com",
+    "project_id": "vivero-6bd68",
+    "storage_bucket": "vivero-6bd68.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:734375643835:android:297d1e1ca5feebcd",
+        "android_client_info": {
+          "package_name": "com.example.vivero"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "734375643835-stovcrk8a6t2tir83fqgmvlvnlmghlu2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.vivero",
+            "certificate_hash": "3bcd3d9f38aab04737e56ae6dc48e5792d59743f"
+          }
+        },
+        {
+          "client_id": "734375643835-nbj47fshiir1pvodqedokk0od727n8he.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCaIJyCELem3Uba49sJypUcp1fdPce-h6g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "734375643835-nbj47fshiir1pvodqedokk0od727n8he.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
