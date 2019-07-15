@@ -5,9 +5,11 @@ import 'package:vivero/models/usuario.dart';
 class TransaccionService {
   List<Producto> productos;
 
-  var map = new Map<String, num>();
+  Map<String, num> map = new Map<String, num>();
 
   final Firestore _db = Firestore.instance;
+
+  num contadorUnidades = 1;
 
   // constructor
   TransaccionService() {
@@ -16,20 +18,17 @@ class TransaccionService {
 
   void agregar(Producto producto) {
     if (map.containsKey(producto.id)) {
-      map[producto.id] = map[producto.id] + 1;
+      map[producto.id] = map[producto.id] + contadorUnidades;
     } else {
       this.productos.add(producto);
-      map[producto.id] = 1;
+      map[producto.id] = contadorUnidades;
     }
+    reestablecerContador();
   }
 
   void agregarPorCantidad(Producto producto, num cantidad) {
-    if (map.containsKey(producto.id)) {
-      map[producto.id] = map[producto.id] + cantidad;
-    } else {
-      this.productos.add(producto);
-      map[producto.id] = cantidad;
-    }
+    establecerContador(cantidad);
+    agregar(producto);
   }
 
   void quitar(Producto producto) {
@@ -47,7 +46,7 @@ class TransaccionService {
     return productos.map((p) => p.id).contains(producto.id);
   }
 
-  List<Producto> obtener() {
+  List<Producto> obtenerProductos() {
     return this.productos;
   }
 
@@ -65,6 +64,22 @@ class TransaccionService {
     productos.forEach((producto) =>
         suma += (producto.obtenerPrecioVenta() * map[producto.id]));
     return suma;
+  }
+
+  void incrementarContador() {
+    contadorUnidades++;
+  }
+
+  void decrementarContador() {
+    if (contadorUnidades > 0) contadorUnidades--;
+  }
+
+  void reestablecerContador() {
+    contadorUnidades = 1;
+  }
+
+  void establecerContador(num cantidad) {
+    contadorUnidades = cantidad;
   }
 
   finalizar(Usuario usuario) async {

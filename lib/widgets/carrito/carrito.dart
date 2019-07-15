@@ -21,9 +21,9 @@ class _CarritoWidget extends State<CarritoWidget> {
         separatorBuilder: (context, index) {
           return Divider();
         },
-        itemCount: transaccionService.obtener().length,
+        itemCount: transaccionService.obtenerProductos().length,
         itemBuilder: (context, index) {
-          final item = transaccionService.obtener()[index];
+          final item = transaccionService.obtenerProductos()[index];
 
           return ListTile(
             onTap: () => navegarDetalle(context, item),
@@ -162,8 +162,10 @@ class _CarritoWidget extends State<CarritoWidget> {
               IconButton(
                 icon: Icon(Icons.remove),
                 onPressed: () {
-                  cantidad--;
-                  txtCantidad.text = cantidad.toString();
+                  if (cantidad > 1) {
+                    cantidad--;
+                    txtCantidad.text = cantidad.toString();
+                  }
                 },
               ),
             ],

@@ -7,7 +7,7 @@ void main() {
     test('Tiene cero productos', () {
       final TransaccionService transaccion = new TransaccionService();
 
-      expect(transaccion.obtener().length, 0);
+      expect(transaccion.obtenerProductos().length, 0);
     });
 
     test('Tiene cero unidades de un producto cualquiera', () {
@@ -51,13 +51,13 @@ void main() {
       final Producto producto3 = new Producto(id: "3");
 
       transaccion.agregar(producto1);
-      expect(transaccion.obtener().length, 1);
+      expect(transaccion.obtenerProductos().length, 1);
 
       transaccion.agregar(producto2);
-      expect(transaccion.obtener().length, 2);
+      expect(transaccion.obtenerProductos().length, 2);
 
       transaccion.agregar(producto3);
-      expect(transaccion.obtener().length, 3);
+      expect(transaccion.obtenerProductos().length, 3);
     });
 
     test(
@@ -86,15 +86,15 @@ void main() {
 
       transaccion.agregar(producto1);
       expect(transaccion.obtenerUnidades(producto1), 1);
-      expect(transaccion.obtener().length, 1);
+      expect(transaccion.obtenerProductos().length, 1);
 
       transaccion.agregar(producto1);
       expect(transaccion.obtenerUnidades(producto1), 2);
-      expect(transaccion.obtener().length, 1);
+      expect(transaccion.obtenerProductos().length, 1);
 
       transaccion.agregar(producto1);
       expect(transaccion.obtenerUnidades(producto1), 3);
-      expect(transaccion.obtener().length, 1);
+      expect(transaccion.obtenerProductos().length, 1);
     });
 
     test(
@@ -103,17 +103,43 @@ void main() {
       final TransaccionService transaccion = new TransaccionService();
       final Producto producto1 = new Producto(id: "1");
 
+      transaccion.establecerContador(1);
+      transaccion.agregar(producto1);
+      expect(transaccion.obtenerUnidades(producto1), 1);
+      expect(transaccion.obtenerProductos().length, 1);
+
+      transaccion.establecerContador(2);
+      transaccion.agregar(producto1);
+      expect(transaccion.obtenerUnidades(producto1), 3);
+      expect(transaccion.obtenerProductos().length, 1);
+
+      transaccion.agregar(producto1);
+      expect(transaccion.obtenerUnidades(producto1), 4);
+      expect(transaccion.obtenerProductos().length, 1);
+
+      transaccion.establecerContador(3);
+      transaccion.agregar(producto1);
+      expect(transaccion.obtenerUnidades(producto1), 7);
+      expect(transaccion.obtenerProductos().length, 1);
+    });
+
+    test(
+        'Poner una cantidad de unidades por parametro deberia agregar esas unidades del producto',
+        () {
+      final TransaccionService transaccion = new TransaccionService();
+      final Producto producto1 = new Producto(id: "1");
+
       transaccion.agregarPorCantidad(producto1, 1);
       expect(transaccion.obtenerUnidades(producto1), 1);
-      expect(transaccion.obtener().length, 1);
+      expect(transaccion.obtenerProductos().length, 1);
 
       transaccion.agregarPorCantidad(producto1, 2);
       expect(transaccion.obtenerUnidades(producto1), 3);
-      expect(transaccion.obtener().length, 1);
+      expect(transaccion.obtenerProductos().length, 1);
 
       transaccion.agregarPorCantidad(producto1, 3);
       expect(transaccion.obtenerUnidades(producto1), 6);
-      expect(transaccion.obtener().length, 1);
+      expect(transaccion.obtenerProductos().length, 1);
     });
 
     test('Algunos productos, luego puedo obtener el total de unidades', () {
@@ -133,19 +159,44 @@ void main() {
       expect(transaccion.obtenerTotalUnidades(), 10);
     });
 
+    test(
+        'Varios productos y luego quito de a uno, deberian no haber unidades de ellos',
+        () {
+      final TransaccionService transaccion = new TransaccionService();
+
+      final Producto producto1 = new Producto(id: "1");
+      transaccion.agregar(producto1);
+
+      final Producto producto2 = new Producto(id: "2");
+      transaccion.agregar(producto2);
+
+      expect(transaccion.pertenece(producto1), true);
+      expect(transaccion.pertenece(producto2), true);
+
+      transaccion.quitar(producto1);
+      expect(transaccion.pertenece(producto1), false);
+      expect(transaccion.obtenerUnidades(producto1), 0);
+      expect(transaccion.obtenerProductos().length, 1);
+
+      transaccion.quitar(producto2);
+      expect(transaccion.pertenece(producto2), false);
+      expect(transaccion.obtenerUnidades(producto2), 0);
+      expect(transaccion.obtenerProductos().length, 0);
+    });
+
     test('Limpiar el carrito deja en 0 la cantidad de productos y sus unidades',
         () {
       final TransaccionService transaccion = new TransaccionService();
 
-      final Producto producto1 = new Producto();
+      final Producto producto1 = new Producto(id: "1");
       transaccion.agregar(producto1);
 
-      final Producto producto2 = new Producto();
+      final Producto producto2 = new Producto(id: "2");
       transaccion.agregar(producto2);
 
       transaccion.limpiar();
 
-      expect(transaccion.obtener().length, 0);
+      expect(transaccion.obtenerProductos().length, 0);
       expect(transaccion.obtenerUnidades(producto1), 0);
       expect(transaccion.obtenerUnidades(producto2), 0);
     });
