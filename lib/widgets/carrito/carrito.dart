@@ -134,13 +134,13 @@ class _CarritoWidget extends State<CarritoWidget> {
           content: contadorWidget(),
           actions: <Widget>[
             new FlatButton(
-              child: new Text("CERRAR"),
+              child: new Text("CANCELAR"),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             new FlatButton(
-              child: new Text("ACEPTAR"),
+              child: new Text("ESCANEAR"),
               onPressed: () {
                 escanear();
                 Navigator.of(context).pop();
@@ -174,7 +174,7 @@ class _CarritoWidget extends State<CarritoWidget> {
               child: TextField(
                 controller: txtCantidad,
                 keyboardType: TextInputType.number,
-                 textAlign: TextAlign.center,
+                textAlign: TextAlign.center,
               ),
             ),
           ]),

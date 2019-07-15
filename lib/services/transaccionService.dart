@@ -1,20 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vivero/models/producto.dart';
 import 'package:vivero/models/usuario.dart';
-import 'package:vivero/services/auth.dart';
 
 class TransaccionService {
   List<Producto> productos;
 
   var map = new Map<String, num>();
 
-  Usuario usuario;
   final Firestore _db = Firestore.instance;
 
   // constructor
   TransaccionService() {
     productos = new List();
-    authService.profile.listen((usuario) => this.usuario = usuario);
   }
 
   void agregar(Producto producto) {
@@ -54,11 +51,11 @@ class TransaccionService {
     return this.productos;
   }
 
-  obtenerUnidades(Producto producto) {
-    return map[producto.id];
+  num obtenerUnidades(Producto producto) {
+    return map[producto.id] != null ? map[producto.id] : 0;
   }
 
-  obtenerTotalUnidades() {
+  num obtenerTotalUnidades() {
     if (map.values.length == 0) return 0;
     return map.values.reduce((a, b) => a + b);
   }
@@ -70,7 +67,7 @@ class TransaccionService {
     return suma;
   }
 
-  finalizar() async {
+  finalizar(Usuario usuario) async {
     DocumentReference ref =
         _db.collection('transacciones').document(usuario.uid);
 

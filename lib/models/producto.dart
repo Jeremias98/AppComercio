@@ -46,4 +46,8 @@ class Producto {
   num obtenerPrecioVenta() {
     return this.precioUnitario + obtenerGanancia();
   }
+
+  num obtenerPrecioCompra() {
+    return this.precioUnitario;
+  }
 }
