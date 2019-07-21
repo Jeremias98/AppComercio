@@ -12,6 +12,10 @@ class DetalleView extends StatefulWidget {
 }
 
 class _DetalleView extends State<DetalleView> {
+  final Widget listView = Column(
+    children: <Widget>[Text("Descripcion del producto")],
+  );
+
   Widget build(BuildContext context) {
     return new Scaffold(
       backgroundColor: Colors.white,
@@ -24,7 +28,7 @@ class _DetalleView extends State<DetalleView> {
         title: new Text(widget.producto.nombre,
             style: TextStyle(color: Colors.black)),
       ),
-      body: ListView(
+      body: Column(
         children: <Widget>[
           Image.network(widget.producto.fotoUrl),
           ListTile(
@@ -37,16 +41,31 @@ class _DetalleView extends State<DetalleView> {
                   color: Colors.grey,
                 ),
               )),
-          Padding(
-              child: MaterialButton(
-                child: Text('QUITAR DEL CARRITO'),
-                textColor: Colors.black,
-                color: Colors.white,
-                elevation: 0,
-                shape: Border.all(color: Colors.grey, style: BorderStyle.solid),
-                onPressed: () => quitarDelCarrito(widget.producto),
+          Expanded(
+            child: listView,
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width,
+            padding: EdgeInsets.all(14.0),
+            child: GestureDetector(
+              onTap: () {
+                quitarDelCarrito(widget.producto);
+              },
+              child: Container(
+                alignment: Alignment.center,
+                padding: EdgeInsets.all(12.0),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(2.0),
+                    border: Border.all(
+                        color: Colors.grey, style: BorderStyle.solid)),
+                child: Text(
+                  'QUITAR DEL CARRITO',
+                  style: TextStyle(color: Colors.black),
+                ),
               ),
-              padding: EdgeInsets.all(14.0))
+            ),
+          ),
         ],
       ),
     );

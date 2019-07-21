@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:qr_reader/qr_reader.dart';
+import 'package:vivero/clases/contador.dart';
 import 'package:vivero/models/producto.dart';
 import 'package:vivero/services/productosService.dart';
 import 'package:vivero/services/transaccionService.dart';
@@ -14,6 +15,8 @@ class _CarritoWidget extends State<CarritoWidget> {
   Future<String> codigoQR;
   num cantidad = 1;
   var txtCantidad = TextEditingController();
+
+  Contador contador = new Contador();
 
   Widget build(BuildContext context) {
     final Widget listView = ListView.separated(
@@ -60,6 +63,7 @@ class _CarritoWidget extends State<CarritoWidget> {
         Expanded(
           child: listView,
         ),
+        Divider(),
         ListTile(
           title: Text(
             "TOTAL",
@@ -113,8 +117,9 @@ class _CarritoWidget extends State<CarritoWidget> {
 
   cargarProducto(state) {
     _productoEscaneado = state;
-    transaccionService.agregarPorCantidad(_productoEscaneado, cantidad);
-    cantidad = 1;
+    transaccionService.agregarPorCantidad(
+        _productoEscaneado, contador.obtenerContador());
+    contador.reestablecerContador();
   }
 
   agregarAlCarrito(String qr) {
@@ -136,6 +141,7 @@ class _CarritoWidget extends State<CarritoWidget> {
             new FlatButton(
               child: new Text("CANCELAR"),
               onPressed: () {
+                contador.reestablecerContador();
                 Navigator.of(context).pop();
               },
             ),
@@ -162,10 +168,9 @@ class _CarritoWidget extends State<CarritoWidget> {
               IconButton(
                 icon: Icon(Icons.remove),
                 onPressed: () {
-                  if (cantidad > 1) {
-                    cantidad--;
-                    txtCantidad.text = cantidad.toString();
-                  }
+                  contador.decrementarContador();
+                  txtCantidad.text =
+                      contador.obtenerContador().toString();
                 },
               ),
             ],
@@ -185,8 +190,9 @@ class _CarritoWidget extends State<CarritoWidget> {
               IconButton(
                 icon: Icon(Icons.add),
                 onPressed: () {
-                  cantidad++;
-                  txtCantidad.text = cantidad.toString();
+                  contador.incrementarContador();
+                  txtCantidad.text =
+                      contador.obtenerContador().toString();
                 },
               ),
             ],

@@ -11,24 +11,23 @@ class TransaccionService {
 
   num contadorUnidades = 1;
 
-  // constructor
   TransaccionService() {
     productos = new List();
   }
 
   void agregar(Producto producto) {
     if (map.containsKey(producto.id)) {
-      map[producto.id] = map[producto.id] + contadorUnidades;
+      map[producto.id] = map[producto.id] + 1;
     } else {
       this.productos.add(producto);
-      map[producto.id] = contadorUnidades;
+      map[producto.id] = 1;
     }
-    reestablecerContador();
   }
 
   void agregarPorCantidad(Producto producto, num cantidad) {
-    establecerContador(cantidad);
-    agregar(producto);
+    for (num i = 1; i <= cantidad; i++) {
+      agregar(producto);
+    }
   }
 
   void quitar(Producto producto) {
@@ -64,22 +63,6 @@ class TransaccionService {
     productos.forEach((producto) =>
         suma += (producto.obtenerPrecioVenta() * map[producto.id]));
     return suma;
-  }
-
-  void incrementarContador() {
-    contadorUnidades++;
-  }
-
-  void decrementarContador() {
-    if (contadorUnidades > 0) contadorUnidades--;
-  }
-
-  void reestablecerContador() {
-    contadorUnidades = 1;
-  }
-
-  void establecerContador(num cantidad) {
-    contadorUnidades = cantidad;
   }
 
   finalizar(Usuario usuario) async {

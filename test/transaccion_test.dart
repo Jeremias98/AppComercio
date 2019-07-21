@@ -98,32 +98,6 @@ void main() {
     });
 
     test(
-        'Poner una cantidad de unidades especifica deberia agregar esas unidades del producto',
-        () {
-      final TransaccionService transaccion = new TransaccionService();
-      final Producto producto1 = new Producto(id: "1");
-
-      transaccion.establecerContador(1);
-      transaccion.agregar(producto1);
-      expect(transaccion.obtenerUnidades(producto1), 1);
-      expect(transaccion.obtenerProductos().length, 1);
-
-      transaccion.establecerContador(2);
-      transaccion.agregar(producto1);
-      expect(transaccion.obtenerUnidades(producto1), 3);
-      expect(transaccion.obtenerProductos().length, 1);
-
-      transaccion.agregar(producto1);
-      expect(transaccion.obtenerUnidades(producto1), 4);
-      expect(transaccion.obtenerProductos().length, 1);
-
-      transaccion.establecerContador(3);
-      transaccion.agregar(producto1);
-      expect(transaccion.obtenerUnidades(producto1), 7);
-      expect(transaccion.obtenerProductos().length, 1);
-    });
-
-    test(
         'Poner una cantidad de unidades por parametro deberia agregar esas unidades del producto',
         () {
       final TransaccionService transaccion = new TransaccionService();
