@@ -18,6 +18,8 @@ class _CarritoWidget extends State<CarritoWidget> {
 
   Contador contador = new Contador();
 
+  Producto _productoEscaneado = new Producto();
+
   Widget build(BuildContext context) {
     final Widget listView = ListView.separated(
         scrollDirection: Axis.vertical,
@@ -113,8 +115,6 @@ class _CarritoWidget extends State<CarritoWidget> {
     return contenedorWidget;
   }
 
-  Producto _productoEscaneado = new Producto();
-
   cargarProducto(state) {
     _productoEscaneado = state;
     transaccionService.agregarPorCantidad(
@@ -169,8 +169,7 @@ class _CarritoWidget extends State<CarritoWidget> {
                 icon: Icon(Icons.remove),
                 onPressed: () {
                   contador.decrementarContador();
-                  txtCantidad.text =
-                      contador.obtenerContador().toString();
+                  txtCantidad.text = contador.obtenerContador().toString();
                 },
               ),
             ],
@@ -191,8 +190,7 @@ class _CarritoWidget extends State<CarritoWidget> {
                 icon: Icon(Icons.add),
                 onPressed: () {
                   contador.incrementarContador();
-                  txtCantidad.text =
-                      contador.obtenerContador().toString();
+                  txtCantidad.text = contador.obtenerContador().toString();
                 },
               ),
             ],
@@ -216,4 +214,6 @@ class _CarritoWidget extends State<CarritoWidget> {
             builder: (BuildContext context) =>
                 new DetalleView(producto: producto)));
   }
+
+  
 }

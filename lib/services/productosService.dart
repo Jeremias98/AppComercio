@@ -13,7 +13,7 @@ class ProductosService {
     authService.profile.listen((usuario) => this.usuario = usuario);
   }
 
-  obtener() async {
+  obtenerProductos() async {
     QuerySnapshot querySnapshot =
         await _db.collection('productos').getDocuments();
 
