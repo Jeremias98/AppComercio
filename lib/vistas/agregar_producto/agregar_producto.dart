@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vivero/models/producto.dart';
+import 'package:vivero/services/transaccionService.dart';
 
 class AgregarProductoScreen extends StatefulWidget {
   final Producto producto;
@@ -13,6 +14,23 @@ class AgregarProductoScreen extends StatefulWidget {
 class _AgregarProductoScreen extends State<AgregarProductoScreen> {
   final _formKey = GlobalKey<FormState>();
 
+  num unidades = 0;
+
+  obtenerFABAgregar() {
+    return FloatingActionButton.extended(
+        icon: Icon(Icons.add_shopping_cart),
+        backgroundColor: Colors.deepPurpleAccent,
+        onPressed: () {
+          setState(() {
+            transaccionService.agregar(widget.producto);
+          });
+        },
+        label: new Text('AGREGAR ' +
+            '(' +
+            transaccionService.obtenerUnidades(widget.producto).toString() +
+            ')'));
+  }
+
   Widget build(BuildContext context) {
     final Widget formularioScaffold = Scaffold(
         backgroundColor: Colors.white,
@@ -24,6 +42,8 @@ class _AgregarProductoScreen extends State<AgregarProductoScreen> {
           backgroundColor: Colors.white,
           title: new Text("Detalle", style: TextStyle(color: Colors.black)),
         ),
+        floatingActionButton: obtenerFABAgregar(),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         body: Stack(
           children: <Widget>[
             Column(
@@ -61,26 +81,6 @@ class _AgregarProductoScreen extends State<AgregarProductoScreen> {
                               color: Colors.grey,
                             ),
                           )),
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        padding: EdgeInsets.all(14.0),
-                        child: GestureDetector(
-                          onTap: () {},
-                          onLongPress: () {},
-                          child: Container(
-                            alignment: Alignment.center,
-                            padding: EdgeInsets.all(12.0),
-                            decoration: BoxDecoration(
-                              color: Colors.deepPurpleAccent,
-                              borderRadius: BorderRadius.circular(2.0),
-                            ),
-                            child: Text(
-                              'AGREGAR AL CARRITO',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                        ),
-                      ),
                     ],
                   ),
                 )
