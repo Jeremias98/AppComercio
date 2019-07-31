@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:vivero/models/producto.dart';
 import 'package:vivero/vistas/agregar_producto/agregar_producto.dart';
-import 'package:vivero/vistas/detalle/detalle.dart';
 
 class ListaProductosView extends StatefulWidget {
   @override

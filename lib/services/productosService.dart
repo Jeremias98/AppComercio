@@ -34,6 +34,19 @@ class ProductosService {
         .snapshots()
         .map((snap) => Producto.fromFirestore(snap));
   }
+
+  void guardarProducto(Producto producto) async {
+    DocumentReference ref = _db.collection('productos').document();
+
+    return ref.setData({
+      'nombre': producto.nombre,
+      'fotoUrl': producto.fotoUrl,
+      'precioUnitario': producto.precioUnitario,
+      'stock': producto.stock,
+      'porcentajeGanancia': producto.porcentajeGanancia,
+      'descripcion': producto.descripcion
+    }, merge: true);
+  }
 }
 
 final ProductosService productosService = ProductosService();

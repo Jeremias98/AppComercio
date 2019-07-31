@@ -7,6 +7,7 @@ class Producto {
   final num precioUnitario;
   final int stock;
   final num porcentajeGanancia;
+  final String descripcion;
 
   Producto(
       {this.id,
@@ -14,18 +15,21 @@ class Producto {
       this.fotoUrl,
       this.precioUnitario,
       this.stock,
-      this.porcentajeGanancia});
+      this.porcentajeGanancia,
+      this.descripcion});
 
   factory Producto.fromFirestore(DocumentSnapshot doc) {
     Map data = doc.data;
 
     return Producto(
-        id: doc.documentID,
-        nombre: data['nombre'] ?? '',
-        fotoUrl: data['fotoUrl'] ?? '',
-        precioUnitario: data['precioUnitario'] ?? 0,
-        stock: data['stock'] ?? 0,
-        porcentajeGanancia: data['porcentajeGanancia'] ?? 0);
+      id: doc.documentID,
+      nombre: data['nombre'] ?? '',
+      fotoUrl: data['fotoUrl'] ?? '',
+      precioUnitario: data['precioUnitario'] ?? 0,
+      stock: data['stock'] ?? 0,
+      porcentajeGanancia: data['porcentajeGanancia'] ?? 0,
+      descripcion: data['descripcion'] ?? '',
+    );
   }
 
   factory Producto.fromMap(Map data) {
@@ -36,7 +40,8 @@ class Producto {
         fotoUrl: data['fotoUrl'] ?? '',
         precioUnitario: data['precioUnitario'] ?? 0,
         stock: data['stock'] ?? 0,
-        porcentajeGanancia: data['porcentajeGanancia'] ?? 0);
+        porcentajeGanancia: data['porcentajeGanancia'] ?? 0,
+        descripcion: data['descripcion'] ?? '');
   }
 
   num obtenerGanancia() {

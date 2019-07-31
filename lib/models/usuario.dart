@@ -7,6 +7,7 @@ class Usuario {
   final String email;
   final String fotoUrl;
   final DateTime ultimaVez;
+  final bool esAdmin;
 
   Usuario(
       {this.id,
@@ -14,7 +15,8 @@ class Usuario {
       this.fotoUrl,
       this.ultimaVez,
       this.nombre,
-      this.uid});
+      this.uid,
+      this.esAdmin});
 
   factory Usuario.fromFirestore(DocumentSnapshot doc) {
     Map data = doc.data;
@@ -25,7 +27,8 @@ class Usuario {
         nombre: data['nombre'] ?? 'pipo',
         email: data['email'] ?? 0,
         fotoUrl: data['fotoUrl'] ?? '',
-        ultimaVez: data['ultimaVez'] ?? null);
+        ultimaVez: data['ultimaVez'] ?? null,
+        esAdmin: data['esAdmin']);
   }
 
   factory Usuario.fromMap(Map data) {
@@ -36,6 +39,7 @@ class Usuario {
         nombre: data['nombre'] ?? '',
         email: data['email'] ?? 0,
         fotoUrl: data['fotoUrl'] ?? '',
-        ultimaVez: data['ultimaVez'] ?? null);
+        ultimaVez: data['ultimaVez'] ?? null,
+        esAdmin: data['esAdmin']);
   }
 }
