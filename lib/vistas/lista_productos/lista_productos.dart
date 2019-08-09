@@ -9,7 +9,17 @@ class ListaProductosView extends StatefulWidget {
 }
 
 class _ListaProductosView extends State<ListaProductosView> {
+  bool modoSeleccion = false;
+    List<Producto> productosSeleccionado = new List<Producto>();
   Widget build(BuildContext context) {
+
+    Widget obtenerSubtituloStock(num stock) {
+      if (stock == 0) {
+        return Text('Sin stock', style: TextStyle(color: Colors.red));
+      }
+      return Text(stock.toString() + ' en stock');
+    }
+
     final Widget streamBuilderList = StreamBuilder<QuerySnapshot>(
       stream: Firestore.instance.collection("productos").snapshots(),
       builder:
@@ -30,13 +40,18 @@ class _ListaProductosView extends State<ListaProductosView> {
 
                   return ListTile(
                     onTap: () => navegarDetalle(context, producto),
+                    onLongPress: () => setState(() {
+                      modoSeleccion = true;
+                      productosSeleccionado.add(producto);
+                    }),
                     leading: CircleAvatar(
                       backgroundImage: NetworkImage(producto.fotoUrl),
                     ),
                     title: Text(producto.nombre.toString()),
-                    subtitle: Text(producto.stock.toString() + ' en stock'),
+                    subtitle: obtenerSubtituloStock(producto.stock),
                     trailing:
                         Text('\$' + producto.obtenerPrecioVenta().toString()),
+                    selected: productosSeleccionado.contains(producto),
                   );
                 });
         }

@@ -12,7 +12,8 @@ class AuthService {
 
   // Shared State for Widgets
   Observable<FirebaseUser> user; // firebase user
-  Observable<Usuario> profile; // custom user data in Firestore
+  Observable<Usuario> profile;
+  Usuario usuario;
   PublishSubject loading = PublishSubject();
   bool sesionIniciada = false;
 
@@ -75,10 +76,17 @@ class AuthService {
     }, merge: true);
   }
 
+  establecerUsuario(Usuario usuario) {
+    this.usuario = usuario;
+  }
+
+  obtenerUsuario() {
+    return this.usuario;
+  }
+
   void signOut() {
     _auth.signOut();
   }
-
 }
 
 final AuthService authService = AuthService();

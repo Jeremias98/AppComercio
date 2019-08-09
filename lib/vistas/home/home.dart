@@ -12,9 +12,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreen extends State<HomeScreen> {
-  Usuario _profile = new Usuario();
-
   int _selectedIndex = 0;
+
+  Usuario _profile = new Usuario();
 
   Future<String> codigoQR;
 
@@ -59,7 +59,6 @@ class _HomeScreen extends State<HomeScreen> {
           ])
         ],
       ),
-      bottomNavigationBar: barraInferior(),
     );
 
     Widget childWidget = authService.sesionIniciada ? vistaHome : vistaLogin;
@@ -71,7 +70,13 @@ class _HomeScreen extends State<HomeScreen> {
   initState() {
     super.initState();
     transaccionService.limpiar();
-    authService.profile.listen((state) => setState(() => _profile = state));
+    authService.profile.listen(
+        (state) => setState(() => authService.establecerUsuario(state)));
+  }
+
+  void establecerUsuario(state) {
+    _profile = state;
+    authService.establecerUsuario(state);
   }
 
   void salir(BuildContext context) {
@@ -87,7 +92,7 @@ class _HomeScreen extends State<HomeScreen> {
 
   Widget barraInferior() {
     return BottomNavigationBar(
-      showSelectedLabels: false, 
+      showSelectedLabels: false,
       showUnselectedLabels: false,
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(

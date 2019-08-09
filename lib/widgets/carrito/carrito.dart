@@ -2,11 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:qr_reader/qr_reader.dart';
 import 'package:vivero/clases/contador.dart';
 import 'package:vivero/models/producto.dart';
+import 'package:vivero/models/usuario.dart';
 import 'package:vivero/services/productosService.dart';
 import 'package:vivero/services/transaccionService.dart';
 import 'package:vivero/vistas/detalle/detalle.dart';
+import 'package:vivero/vistas/resumen/resumen.dart';
 
 class CarritoWidget extends StatefulWidget {
+  final Usuario usuario;
+
+  const CarritoWidget({Key key, this.usuario}) : super(key: key);
+
   @override
   _CarritoWidget createState() => _CarritoWidget();
 }
@@ -59,7 +65,7 @@ class _CarritoWidget extends State<CarritoWidget> {
             ),
             shape: Border.all(
                 color: Colors.deepPurpleAccent, style: BorderStyle.solid),
-            onPressed: () {},
+            onPressed: () {navegarResumen(context);},
           ),
         ),
         Expanded(
@@ -215,5 +221,10 @@ class _CarritoWidget extends State<CarritoWidget> {
                 new DetalleView(producto: producto)));
   }
 
-  
+  navegarResumen(context) {
+    Navigator.push(
+        context,
+        new MaterialPageRoute(
+            builder: (BuildContext context) => new ResumenView()));
+  }
 }

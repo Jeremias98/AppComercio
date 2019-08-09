@@ -49,6 +49,13 @@ class _AgregarProductoScreen extends State<AgregarProductoScreen> {
     });
   }
 
+  Widget obtenerSubtituloStock(num stock) {
+    if (stock == 0) {
+      return Text('Sin stock', style: TextStyle(color: Colors.red));
+    }
+    return Text(stock.toString() + ' en stock');
+  }
+
   Widget build(BuildContext context) {
     final Widget formularioScaffold = Scaffold(
         backgroundColor: Colors.white,
@@ -86,8 +93,7 @@ class _AgregarProductoScreen extends State<AgregarProductoScreen> {
                             style: TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.w500),
                           ),
-                          subtitle: Text(
-                              widget.producto.stock.toString() + ' en stock'),
+                          subtitle: obtenerSubtituloStock(widget.producto.stock),
                           trailing: Text(
                             '\$' +
                                 (widget.producto.precioUnitario != null
@@ -145,6 +151,8 @@ class _AgregarProductoScreen extends State<AgregarProductoScreen> {
         icon: Icon(Icons.add_shopping_cart),
         backgroundColor: Colors.deepPurpleAccent,
         onPressed: () {
+          if (transaccionService.obtenerUnidades(widget.producto) ==
+              widget.producto.stock) return null;
           setState(() {
             transaccionService.agregar(widget.producto);
           });
@@ -171,7 +179,6 @@ class _AgregarProductoScreen extends State<AgregarProductoScreen> {
                 descripcion: descripcionController.value.text);
 
             productosService.guardarProducto(producto);
-            print(nombreController.value.text);
           });
         },
         label: new Text('GUARDAR'));
