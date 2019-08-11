@@ -1,17 +1,17 @@
 import "package:test/test.dart";
 import 'package:vivero/models/producto.dart';
-import 'package:vivero/services/transaccionService.dart';
+import 'package:vivero/clases/carrito.dart';
 
 void main() {
   group('Carrito inicialmente: ', () {
     test('Tiene cero productos', () {
-      final TransaccionService transaccion = new TransaccionService();
+      final Carrito transaccion = new Carrito();
 
       expect(transaccion.obtenerProductos().length, 0);
     });
 
     test('Tiene cero unidades de un producto cualquiera', () {
-      final TransaccionService transaccion = new TransaccionService();
+      final Carrito transaccion = new Carrito();
 
       final Producto producto1 = new Producto(id: "1");
 
@@ -19,13 +19,13 @@ void main() {
     });
 
     test('Tiene cero unidades en total', () {
-      final TransaccionService transaccion = new TransaccionService();
+      final Carrito transaccion = new Carrito();
 
       expect(transaccion.obtenerTotalUnidades(), 0);
     });
 
     test('Suma un precio total de cero', () {
-      final TransaccionService transaccion = new TransaccionService();
+      final Carrito transaccion = new Carrito();
 
       expect(transaccion.obtenerPrecioTotal(), 0);
     });
@@ -34,7 +34,7 @@ void main() {
   group('Agregar al carrito: ', () {
     test('Un producto no pertenece, lo agrego, luego este pertenece al carrito',
         () {
-      final TransaccionService transaccion = new TransaccionService();
+      final Carrito transaccion = new Carrito();
       final Producto producto1 = new Producto(id: "1");
 
       expect(transaccion.pertenece(producto1), false);
@@ -45,7 +45,7 @@ void main() {
     test(
         'Productos distintos al carrito deberia incrementar la cantidad de productos en 1',
         () {
-      final TransaccionService transaccion = new TransaccionService();
+      final Carrito transaccion = new Carrito();
       final Producto producto1 = new Producto(id: "1");
       final Producto producto2 = new Producto(id: "2");
       final Producto producto3 = new Producto(id: "3");
@@ -63,7 +63,7 @@ void main() {
     test(
         'Productos distintos al carrito deberia incrementar las unidades de cada producto uno en 1',
         () {
-      final TransaccionService transaccion = new TransaccionService();
+      final Carrito transaccion = new Carrito();
       final Producto producto1 = new Producto(id: "1");
       final Producto producto2 = new Producto(id: "2");
       final Producto producto3 = new Producto(id: "3");
@@ -81,7 +81,7 @@ void main() {
     test(
         'Varias veces el mismo producto deberia incrementar sus unidades, pero no la cantidad de productos',
         () {
-      final TransaccionService transaccion = new TransaccionService();
+      final Carrito transaccion = new Carrito();
       final Producto producto1 = new Producto(id: "1");
 
       transaccion.agregar(producto1);
@@ -100,7 +100,7 @@ void main() {
     test(
         'Poner una cantidad de unidades por parametro deberia agregar esas unidades del producto',
         () {
-      final TransaccionService transaccion = new TransaccionService();
+      final Carrito transaccion = new Carrito();
       final Producto producto1 = new Producto(id: "1");
 
       transaccion.agregarPorCantidad(producto1, 1);
@@ -117,7 +117,7 @@ void main() {
     });
 
     test('Algunos productos, luego puedo obtener el total de unidades', () {
-      final TransaccionService transaccion = new TransaccionService();
+      final Carrito transaccion = new Carrito();
       final Producto producto1 = new Producto(id: "1");
       final Producto producto2 = new Producto(id: "2");
       final Producto producto3 = new Producto(id: "3");
@@ -136,7 +136,7 @@ void main() {
     test(
         'Varios productos y luego quito de a uno, deberian no haber unidades de ellos',
         () {
-      final TransaccionService transaccion = new TransaccionService();
+      final Carrito transaccion = new Carrito();
 
       final Producto producto1 = new Producto(id: "1");
       transaccion.agregar(producto1);
@@ -160,7 +160,7 @@ void main() {
 
     test('Limpiar el carrito deja en 0 la cantidad de productos y sus unidades',
         () {
-      final TransaccionService transaccion = new TransaccionService();
+      final Carrito transaccion = new Carrito();
 
       final Producto producto1 = new Producto(id: "1");
       transaccion.agregar(producto1);
@@ -180,7 +180,7 @@ void main() {
     test(
         'Agrego un producto con una unidad, y el precio total es el precio de venta de ese producto',
         () {
-      final TransaccionService transaccion = new TransaccionService();
+      final Carrito transaccion = new Carrito();
       final Producto producto1 =
           new Producto(id: "1", precioUnitario: 10, porcentajeGanancia: 5);
 
@@ -191,7 +191,7 @@ void main() {
     test(
         'Agregar varias unidades de un producto, devuelve el precio de venta multiplicado por las unidades',
         () {
-      final TransaccionService transaccion = new TransaccionService();
+      final Carrito transaccion = new Carrito();
       final Producto producto1 =
           new Producto(id: "1", precioUnitario: 20, porcentajeGanancia: 10);
 
@@ -201,7 +201,7 @@ void main() {
     });
 
     test('Agrego varios productos y el precio total es la suma de ellos', () {
-      final TransaccionService transaccion = new TransaccionService();
+      final Carrito transaccion = new Carrito();
       final Producto producto1 =
           new Producto(id: "1", precioUnitario: 10, porcentajeGanancia: 10);
       final Producto producto2 =
@@ -222,7 +222,7 @@ void main() {
     test(
         'Agrego varias unidades de distintos productos y el precio total es la suma de ellos por su cantidad de unidades',
         () {
-      final TransaccionService transaccion = new TransaccionService();
+      final Carrito transaccion = new Carrito();
       final Producto producto1 =
           new Producto(id: "1", precioUnitario: 10, porcentajeGanancia: 10);
       final Producto producto2 =

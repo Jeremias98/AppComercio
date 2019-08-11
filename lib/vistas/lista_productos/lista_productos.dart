@@ -10,14 +10,23 @@ class ListaProductosView extends StatefulWidget {
 
 class _ListaProductosView extends State<ListaProductosView> {
   bool modoSeleccion = false;
-    List<Producto> productosSeleccionado = new List<Producto>();
+  List<Producto> productosSeleccionado = new List<Producto>();
   Widget build(BuildContext context) {
-
     Widget obtenerSubtituloStock(num stock) {
       if (stock == 0) {
         return Text('Sin stock', style: TextStyle(color: Colors.red));
       }
       return Text(stock.toString() + ' en stock');
+    }
+
+    Widget obtenerTitulo(Producto producto) {
+      bool seleccionado =
+          productosSeleccionado.contains((p) => p.id == producto.id);
+      print(producto.nombre.toString() + " " + seleccionado.toString());
+      if (seleccionado)
+        return Text(producto.nombre.toString(),
+            style: TextStyle(color: Colors.blue));
+      return Text(producto.nombre.toString());
     }
 
     final Widget streamBuilderList = StreamBuilder<QuerySnapshot>(
@@ -47,11 +56,10 @@ class _ListaProductosView extends State<ListaProductosView> {
                     leading: CircleAvatar(
                       backgroundImage: NetworkImage(producto.fotoUrl),
                     ),
-                    title: Text(producto.nombre.toString()),
+                    title: obtenerTitulo(producto),
                     subtitle: obtenerSubtituloStock(producto.stock),
                     trailing:
                         Text('\$' + producto.obtenerPrecioVenta().toString()),
-                    selected: productosSeleccionado.contains(producto),
                   );
                 });
         }

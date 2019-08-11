@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "887271182028",
+    "firebase_url": "https://mi-comercio-produccion.firebaseio.com",
+    "project_id": "mi-comercio-produccion",
+    "storage_bucket": "mi-comercio-produccion.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:887271182028:android:297d1e1ca5feebcd",
+        "android_client_info": {
+          "package_name": "com.example.vivero"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "887271182028-cblvclmthid64iju1ltgse8hcbgthfkt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.vivero",
+            "certificate_hash": "7592411ebf48fc660ef1ecc7a1a6a12eae63ea7a"
+          }
+        },
+        {
+          "client_id": "887271182028-0hm5ijio46llq4t61bh9j3o8dd0ot0r1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAH74-Tq8sR44iAa_IO4qGlemdQ3pklpL4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "887271182028-0hm5ijio46llq4t61bh9j3o8dd0ot0r1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
