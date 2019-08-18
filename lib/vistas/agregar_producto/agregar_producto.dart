@@ -93,7 +93,8 @@ class _AgregarProductoScreen extends State<AgregarProductoScreen> {
                             style: TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.w500),
                           ),
-                          subtitle: obtenerSubtituloStock(widget.producto.stock),
+                          subtitle:
+                              obtenerSubtituloStock(widget.producto.stock),
                           trailing: Text(
                             '\$' +
                                 (widget.producto.precioUnitario != null
@@ -106,7 +107,20 @@ class _AgregarProductoScreen extends State<AgregarProductoScreen> {
                               color: Colors.grey,
                             ),
                           )),
-                      obtenerFormulario(),
+                      // obtenerFormulario(),
+                      Column(
+                        children: <Widget>[
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Container(
+                              padding: EdgeInsets.fromLTRB(17.0, 0, 0, 0),
+                              child: Text(
+                                widget.producto.descripcion.toString(),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
                     ],
                   ),
                 )

@@ -10,6 +10,12 @@ void main() {
       expect(transaccion.obtenerProductos().length, 0);
     });
 
+    test('Esta vacio', () {
+      final Carrito transaccion = new Carrito();
+
+      expect(transaccion.estaVacio(), true);
+    });
+
     test('Tiene cero unidades de un producto cualquiera', () {
       final Carrito transaccion = new Carrito();
 

@@ -1,16 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:vivero/clases/carrito.dart';
 import 'package:vivero/models/producto.dart';
 import 'package:vivero/models/usuario.dart';
 import 'package:vivero/services/auth.dart';
 
 class ProductosService {
   Usuario usuario;
+  Carrito carrito;
   final Firestore _db = Firestore.instance;
 
   // constructor
   ProductosService() {
     authService.profile.listen((usuario) => this.usuario = usuario);
+    carrito = new Carrito();
   }
 
   obtenerProductos() async {

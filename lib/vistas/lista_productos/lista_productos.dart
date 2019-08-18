@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:vivero/models/producto.dart';
+import 'package:vivero/services/productosService.dart';
 import 'package:vivero/vistas/agregar_producto/agregar_producto.dart';
 
 class ListaProductosView extends StatefulWidget {
@@ -9,24 +10,56 @@ class ListaProductosView extends StatefulWidget {
 }
 
 class _ListaProductosView extends State<ListaProductosView> {
-  bool modoSeleccion = false;
-  List<Producto> productosSeleccionado = new List<Producto>();
   Widget build(BuildContext context) {
-    Widget obtenerSubtituloStock(num stock) {
-      if (stock == 0) {
-        return Text('Sin stock', style: TextStyle(color: Colors.red));
-      }
-      return Text(stock.toString() + ' en stock');
+    Widget textoCarrito() {
+      return productosService.carrito.estaVacio()
+          ? Text("NUEVO PRODUCTO", style: TextStyle(color: Colors.white))
+          : Text("CANCELAR", style: TextStyle(color: Colors.white));
     }
 
-    Widget obtenerTitulo(Producto producto) {
-      bool seleccionado =
-          productosSeleccionado.contains((p) => p.id == producto.id);
-      print(producto.nombre.toString() + " " + seleccionado.toString());
-      if (seleccionado)
-        return Text(producto.nombre.toString(),
-            style: TextStyle(color: Colors.blue));
-      return Text(producto.nombre.toString());
+    Widget botonPrincipal = Container(
+      width: MediaQuery.of(context).size.width,
+      padding: EdgeInsets.all(14.0),
+      child: GestureDetector(
+        onTap: () {
+          botonPrincipalClickeado(context, new Producto());
+        },
+        child: Container(
+            alignment: Alignment.center,
+            padding: EdgeInsets.all(12.0),
+            decoration: BoxDecoration(
+              color: Colors.deepPurpleAccent,
+              borderRadius: BorderRadius.circular(2.0),
+            ),
+            child: textoCarrito()),
+      ),
+    );
+
+    seleccionarProducto(Producto producto) {
+      setState(() {
+        if (!productosService.carrito.pertenece(producto)) {
+          productosService.carrito.agregar(producto);
+        } else {
+          productosService.carrito.quitar(producto);
+        }
+      });
+    }
+
+    productoClickeado(Producto producto, context) {
+      if (productosService.carrito.estaVacio()) {
+        botonPrincipalClickeado(context, producto);
+      } else {
+        seleccionarProducto(producto);
+      }
+    }
+
+    Widget obtenerSubtituloStock(Producto producto) {
+      if (producto.stock == 0) {
+        return productosService.carrito.pertenece(producto)
+            ? Text('Sin stock', style: TextStyle(color: Colors.blue))
+            : Text('Sin stock', style: TextStyle(color: Colors.red));
+      }
+      return Text(producto.stock.toString() + ' en stock');
     }
 
     final Widget streamBuilderList = StreamBuilder<QuerySnapshot>(
@@ -48,44 +81,20 @@ class _ListaProductosView extends State<ListaProductosView> {
                       querySnapshot.data.documents[index]);
 
                   return ListTile(
-                    onTap: () => navegarDetalle(context, producto),
-                    onLongPress: () => setState(() {
-                      modoSeleccion = true;
-                      productosSeleccionado.add(producto);
-                    }),
+                    onTap: () => productoClickeado(producto, context),
+                    onLongPress: () => seleccionarProducto(producto),
                     leading: CircleAvatar(
                       backgroundImage: NetworkImage(producto.fotoUrl),
                     ),
-                    title: obtenerTitulo(producto),
-                    subtitle: obtenerSubtituloStock(producto.stock),
+                    title: Text(producto.nombre.toString()),
+                    subtitle: obtenerSubtituloStock(producto),
                     trailing:
                         Text('\$' + producto.obtenerPrecioVenta().toString()),
+                    selected: productosService.carrito.pertenece(producto),
                   );
                 });
         }
       },
-    );
-
-    final Widget botonAgregar = Container(
-      width: MediaQuery.of(context).size.width,
-      padding: EdgeInsets.all(14.0),
-      child: GestureDetector(
-        onTap: () {
-          navegarDetalle(context, new Producto());
-        },
-        child: Container(
-          alignment: Alignment.center,
-          padding: EdgeInsets.all(12.0),
-          decoration: BoxDecoration(
-            color: Colors.deepPurpleAccent,
-            borderRadius: BorderRadius.circular(2.0),
-          ),
-          child: Text(
-            'NUEVO PRODUCTO',
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
-      ),
     );
 
     final Widget vista = Column(
@@ -93,23 +102,24 @@ class _ListaProductosView extends State<ListaProductosView> {
         Expanded(
           child: streamBuilderList,
         ),
-        botonAgregar
+        botonPrincipal
       ],
     );
 
     return vista;
   }
 
-  @override
-  initState() {
-    super.initState();
-  }
-
-  navegarDetalle(context, producto) {
-    Navigator.push(
-        context,
-        new MaterialPageRoute(
-            builder: (BuildContext context) =>
-                new AgregarProductoScreen(producto: producto)));
+  botonPrincipalClickeado(context, producto) {
+    if (productosService.carrito.estaVacio()) {
+      Navigator.push(
+          context,
+          new MaterialPageRoute(
+              builder: (BuildContext context) =>
+                  new AgregarProductoScreen(producto: producto)));
+    } else {
+      setState(() {
+        productosService.carrito.limpiar();
+      });
+    }
   }
 }

@@ -2,18 +2,18 @@ import 'package:vivero/models/producto.dart';
 
 class Carrito {
   List<Producto> productos;
-  Map<String, num> map = new Map<String, num>();
+  Map<String, num> _map = new Map<String, num>();
 
   Carrito() {
     this.productos = List<Producto>();
   }
 
   void agregar(Producto producto) {
-    if (map.containsKey(producto.id)) {
-      map[producto.id] = map[producto.id] + 1;
+    if (_map.containsKey(producto.id)) {
+      _map[producto.id] = _map[producto.id] + 1;
     } else {
       this.productos.add(producto);
-      map[producto.id] = 1;
+      _map[producto.id] = 1;
     }
   }
 
@@ -26,16 +26,16 @@ class Carrito {
   void quitar(Producto producto) {
     if (!pertenece(producto)) return;
     this.productos.remove(producto);
-    map.remove(producto.id);
+    _map.remove(producto.id);
   }
 
   void limpiar() {
     this.productos.length = 0;
-    map.clear();
+    _map.clear();
   }
 
   bool pertenece(Producto producto) {
-    return productos.map((p) => p.id).contains(producto.id);
+    return _map[producto.id] != null ? _map[producto.id] > 0 : false;
   }
 
   List<Producto> obtenerProductos() {
@@ -43,18 +43,22 @@ class Carrito {
   }
 
   num obtenerUnidades(Producto producto) {
-    return map[producto.id] != null ? map[producto.id] : 0;
+    return _map[producto.id] != null ? _map[producto.id] : 0;
   }
 
   num obtenerTotalUnidades() {
-    if (map.values.length == 0) return 0;
-    return map.values.reduce((a, b) => a + b);
+    if (_map.values.length == 0) return 0;
+    return _map.values.reduce((a, b) => a + b);
+  }
+
+  bool estaVacio() {
+    return obtenerTotalUnidades() == 0;
   }
 
   obtenerPrecioTotal() {
     num suma = 0;
     productos.forEach((producto) =>
-        suma += (producto.obtenerPrecioVenta() * map[producto.id]));
+        suma += (producto.obtenerPrecioVenta() * _map[producto.id]));
     return suma;
   }
 }
