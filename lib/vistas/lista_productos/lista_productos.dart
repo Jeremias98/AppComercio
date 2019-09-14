@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:vivero/models/producto.dart';
-import 'package:vivero/services/productosService.dart';
+import 'package:vivero/services/menu_contextual_service.dart';
+import 'package:vivero/services/productos_service.dart';
 import 'package:vivero/vistas/agregar_producto/agregar_producto.dart';
 
 class ListaProductosView extends StatefulWidget {
@@ -42,6 +43,11 @@ class _ListaProductosView extends State<ListaProductosView> {
         } else {
           productosService.carrito.quitar(producto);
         }
+
+        if (productosService.carrito.estaVacio())
+          menuContextualService.deshabilitar("RENOVAR_STOCK_PRECIOS");
+        else
+          menuContextualService.habilitar("RENOVAR_STOCK_PRECIOS");
       });
     }
 

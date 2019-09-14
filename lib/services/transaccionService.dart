@@ -3,7 +3,6 @@ import 'package:vivero/clases/carrito.dart';
 import 'package:vivero/models/usuario.dart';
 
 class TransaccionService extends Carrito {
-
   final Firestore _db = Firestore.instance;
 
   TransaccionService() : super();
@@ -41,7 +40,6 @@ class TransaccionService extends Carrito {
     });
 
     return batch.commit();
-
   }
 }
 

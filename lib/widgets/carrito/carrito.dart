@@ -3,7 +3,7 @@ import 'package:qr_reader/qr_reader.dart';
 import 'package:vivero/clases/contador.dart';
 import 'package:vivero/models/producto.dart';
 import 'package:vivero/models/usuario.dart';
-import 'package:vivero/services/productosService.dart';
+import 'package:vivero/services/productos_service.dart';
 import 'package:vivero/services/transaccionService.dart';
 import 'package:vivero/vistas/detalle/detalle.dart';
 import 'package:vivero/vistas/resumen/resumen.dart';

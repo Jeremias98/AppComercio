@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:vivero/models/usuario.dart';
+import 'package:vivero/clases/item_menu.dart';
+import 'package:vivero/clases/menu_contextual.dart';
 import 'package:vivero/services/auth.dart';
+import 'package:vivero/services/menu_contextual_service.dart';
 import 'package:vivero/services/transaccionService.dart';
 import 'package:vivero/vistas/lista_productos/lista_productos.dart';
 import 'package:vivero/widgets/carrito/carrito.dart';
@@ -12,11 +14,11 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreen extends State<HomeScreen> {
-  int _selectedIndex = 0;
-
-  Usuario _profile = new Usuario();
+  int _indiceSeleccionado = 0;
 
   Future<String> codigoQR;
+
+  MenuContextual _menuContextual = new MenuContextual();
 
   final List<Widget> _bodyChildren = [CarritoWidget(), ListaProductosView()];
 
@@ -34,16 +36,27 @@ class _HomeScreen extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final Widget vistaHome = Scaffold(
-      appBar: AppBar(
-        title: Text("Mi Comercio"),
-        backgroundColor: Colors.deepPurpleAccent,
-      ),
-      body: _bodyChildren[_selectedIndex],
-      // drawer: new DrawerWidget(usuario: _profile),
-      bottomNavigationBar: barraInferior(),
-      // floatingActionButton: obtenerFAB(_selectedIndex),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-    );
+        appBar: AppBar(
+            title: Text("Mi Comercio"),
+            backgroundColor: Colors.deepPurpleAccent,
+            actions: <Widget>[
+              PopupMenuButton<ItemMenu>(
+                elevation: 3.2,
+                onCanceled: () {},
+                onSelected: (item) =>
+                    menuContextualService.itemClickeado(item, context),
+                itemBuilder: (BuildContext context) {
+                  return menuContextualService.items().map((ItemMenu item) {
+                    return PopupMenuItem<ItemMenu>(
+                      value: item,
+                      child: Text(item.titulo),
+                    );
+                  }).toList();
+                },
+              )
+            ]),
+        body: _bodyChildren[_indiceSeleccionado],
+        bottomNavigationBar: barraInferior());
 
     final Widget vistaLogin = Scaffold(
       body: Column(
@@ -75,7 +88,6 @@ class _HomeScreen extends State<HomeScreen> {
   }
 
   void establecerUsuario(state) {
-    _profile = state;
     authService.establecerUsuario(state);
   }
 
@@ -86,14 +98,14 @@ class _HomeScreen extends State<HomeScreen> {
 
   void _onItemTapped(int index) {
     setState(() {
-      _selectedIndex = index;
+      _indiceSeleccionado = index;
     });
   }
 
   Widget barraInferior() {
     return BottomNavigationBar(
-      showSelectedLabels: false,
-      showUnselectedLabels: false,
+      // showSelectedLabels: false,
+      // showUnselectedLabels: false,
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: Icon(Icons.shopping_cart),
@@ -108,7 +120,7 @@ class _HomeScreen extends State<HomeScreen> {
           title: Text('Perfil'),
         ),
       ],
-      currentIndex: _selectedIndex,
+      currentIndex: _indiceSeleccionado,
       selectedItemColor: Colors.black,
       onTap: _onItemTapped,
     );

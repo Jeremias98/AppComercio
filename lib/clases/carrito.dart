@@ -25,7 +25,7 @@ class Carrito {
 
   void quitar(Producto producto) {
     if (!pertenece(producto)) return;
-    this.productos.remove(producto);
+    this.productos.removeWhere((p) => p.id == producto.id);
     _map.remove(producto.id);
   }
 

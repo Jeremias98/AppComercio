@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vivero/models/producto.dart';
-import 'package:vivero/services/productosService.dart';
+import 'package:vivero/services/productos_service.dart';
 import 'package:vivero/services/transaccionService.dart';
 
 class CustomPopupMenu {
@@ -116,6 +116,10 @@ class _AgregarProductoScreen extends State<AgregarProductoScreen> {
                               padding: EdgeInsets.fromLTRB(17.0, 0, 0, 0),
                               child: Text(
                                 widget.producto.descripcion.toString(),
+                                style: TextStyle(
+                                    color: Color.fromARGB(255, 150, 150, 150),
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500),
                               ),
                             ),
                           ),
@@ -188,7 +192,7 @@ class _AgregarProductoScreen extends State<AgregarProductoScreen> {
                 precioUnitario: num.parse(precioAlCostoController.value.text),
                 porcentajeGanancia:
                     num.parse(porcDeGananciaController.value.text),
-                stock: num.parse(stockController.value.text),
+                // stock: num.parse(stockController.value.text),
                 fotoUrl: urlFotoController.value.text,
                 descripcion: descripcionController.value.text);
 
