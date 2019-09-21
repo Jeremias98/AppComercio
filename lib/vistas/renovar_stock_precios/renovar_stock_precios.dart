@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vivero/models/producto.dart';
 import 'package:vivero/models/valor_temporal.dart';
 import 'package:vivero/services/productos_service.dart';
+import 'package:intl/intl.dart';
 
 class RenovarStockPreciosView extends StatefulWidget {
   @override
@@ -9,23 +10,37 @@ class RenovarStockPreciosView extends StatefulWidget {
 }
 
 class _RenovarStockPreciosView extends State<RenovarStockPreciosView> {
+  static Map<String, num> nuevoStock = {};
+  static Map<String, num> nuevoPrecio = {};
+
+  @override
+  initState() {
+    super.initState();
+  }
+
   Widget build(BuildContext context) {
     Map<String, List<TextEditingController>> controladores = {};
-    Map<String, num> nuevoStockAuxiliar = {};
 
     Widget formularioPreciosYStock(Producto producto) {
       TextEditingController precioCostoController = TextEditingController();
       TextEditingController porcentajeController = TextEditingController();
       TextEditingController stockController = TextEditingController();
 
-      // producto.stockHistorico.add(new ValorTemporal());
-      // producto.stockHistorico[producto.stockHistorico.length - 1].fecha = DateTime.now();
-      // producto.stockHistorico[producto.stockHistorico.length - 1].valor = null;
+      producto.stockHistorico.add(new ValorTemporal());
+      producto.stockHistorico[producto.stockHistorico.length - 1].fecha =
+          DateTime.now();
+      producto.stockHistorico[producto.stockHistorico.length - 1].valor = null;
 
-      precioCostoController.text = producto.precioUnitario.toString();
+      // precioCostoController.text = producto.precioUnitario.toString();
       porcentajeController.text = producto.porcentajeGanancia.toString();
-      // stockController.text = producto.stockHistorico[producto.stockHistorico.length - 1].valor;
-      // stockController.text = nuevoStockAuxiliar[producto.id].toString();
+
+      if (nuevoStock[producto.id] != null)
+        stockController.text = nuevoStock[producto.id].toString();
+
+      if (nuevoPrecio[producto.id] != null)
+        precioCostoController.text = nuevoPrecio[producto.id].toString();
+      else
+        precioCostoController.text = producto.precioUnitario.toString();
 
       controladores[producto.id] = new List<TextEditingController>();
       controladores[producto.id].add(precioCostoController);
@@ -41,6 +56,7 @@ class _RenovarStockPreciosView extends State<RenovarStockPreciosView> {
               controller: controladores[producto.id][0],
               onChanged: (text) {
                 producto.precioUnitario = num.parse(text);
+                nuevoPrecio[producto.id] = num.parse(text);
               },
               decoration: InputDecoration(
                   labelText: 'Precio al Costo',
@@ -60,8 +76,7 @@ class _RenovarStockPreciosView extends State<RenovarStockPreciosView> {
               keyboardType: TextInputType.number,
               controller: controladores[producto.id][2],
               onChanged: (text) {
-                nuevoStockAuxiliar[producto.id] = num.parse(text);
-                print(nuevoStockAuxiliar[producto.id]);
+                nuevoStock[producto.id] = num.parse(text);
               },
               decoration: InputDecoration(
                   labelText: 'Stock Entrante', prefixIcon: Icon(Icons.backup)),
@@ -80,19 +95,25 @@ class _RenovarStockPreciosView extends State<RenovarStockPreciosView> {
         children: <Widget>[
           ListTile(
             title: Text("Ultimo Precio"),
-            subtitle: Text("12 de Agosto de 2019"),
-            trailing: Text("\$" + producto.obtenerPrecioCompra().toString()),
+            subtitle: Text(producto.obtenerUltimoPrecio() != null
+                ? DateFormat('dd MMM yyyy')
+                    .format(producto.obtenerUltimoPrecio().fecha)
+                : "Sin datos"),
+            trailing: Text(producto.obtenerUltimoPrecio() != null
+                ? "\$" + producto.obtenerUltimoPrecio().valor.toString()
+                : "Sin datos"),
           ),
           ListTile(
-            title: Text("Ultimo stock"),
-            subtitle: Text("16 de Agosto de 2019"),
-            trailing: Text("14 u"),
+            title: Text("Ultimo Stock"),
+            subtitle: Text(DateFormat('dd MMM yyyy')
+                .format(producto.obtenerUltimoStock().fecha)),
+            trailing: Text(producto.obtenerUltimoStock().valor.toString()),
           ),
         ],
       );
     }
 
-    Widget detalleProducto(Producto producto) {
+    Widget informacionProducto(Producto producto) {
       return SingleChildScrollView(
           child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -136,6 +157,32 @@ class _RenovarStockPreciosView extends State<RenovarStockPreciosView> {
       ));
     }
 
+    Widget pantallaFinal(List<Producto> productos) {
+      return ListView.separated(
+          scrollDirection: Axis.vertical,
+          separatorBuilder: (context, index) {
+            return Divider();
+          },
+          itemCount: productos.length,
+          itemBuilder: (context, index) {
+            final Producto producto = productos[index];
+
+            return ListTile(
+                onTap: () {},
+                onLongPress: () {},
+                leading: CircleAvatar(
+                  backgroundImage: NetworkImage(producto.fotoUrl),
+                ),
+                title: Text(producto.nombre.toString()),
+                subtitle: nuevoStock[producto.id] != null
+                    ? Text(
+                        "+" + nuevoStock[producto.id].toString() + " unidades")
+                    : Text("Sin cambios"), //producto.obtenerTextStock(),
+                trailing:
+                    Text('\$' + producto.obtenerPrecioVenta().toString()));
+          });
+    }
+
     return new Scaffold(
         backgroundColor: Colors.white,
         appBar: new AppBar(
@@ -148,12 +195,16 @@ class _RenovarStockPreciosView extends State<RenovarStockPreciosView> {
               style: TextStyle(color: Colors.black)),
         ),
         body: PageView.builder(
-          itemCount: productosService.carrito.obtenerProductos().length,
+          itemCount: productosService.carrito.obtenerProductos().length + 1,
           itemBuilder: (conFtext, index) {
+            if (index == productosService.carrito.obtenerProductos().length) {
+              return pantallaFinal(productosService.carrito.obtenerProductos());
+            }
+
             Producto producto =
                 productosService.carrito.obtenerProductos()[index];
-                
-            return detalleProducto(producto);
+
+            return informacionProducto(producto);
           },
         ));
   }

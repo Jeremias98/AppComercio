@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:vivero/clases/carrito.dart';
 import 'package:vivero/models/producto.dart';
-import 'package:vivero/models/stock.dart';
 import 'package:vivero/models/usuario.dart';
 import 'package:vivero/models/valor_temporal.dart';
 import 'package:vivero/services/auth.dart';
@@ -52,6 +51,45 @@ class ProductosService {
       'porcentajeGanancia': producto.porcentajeGanancia,
       'descripcion': producto.descripcion
     }, merge: true);
+  }
+
+  Future<void> renovarStockYPrecios(List<Producto> productos,
+      Map<String, num> nuevoStock, Map<String, num> nuevoPrecio) async {
+    var batch = _db.batch();
+
+    productos.forEach((producto) {
+      if (nuevoStock[producto.id] != null || nuevoPrecio[producto.id] != null) {
+        DocumentReference refProducto =
+            _db.collection('productos').document(producto.id);
+
+        num stock = nuevoStock[producto.id] != null
+            ? producto.stock + nuevoStock[producto.id]
+            : producto.stock;
+
+        num precio = nuevoPrecio[producto.id] != null
+            ? nuevoPrecio[producto.id]
+            : producto.precioUnitario;
+
+        var fechaActual = DateTime.now();
+
+        if (nuevoStock[producto.id] != null)
+          producto.stockHistorico.add(new ValorTemporal(
+              valor: nuevoStock[producto.id], fecha: fechaActual));
+
+        if (nuevoPrecio[producto.id] != null)
+          producto.precioHistorico.add(new ValorTemporal(
+              valor: nuevoPrecio[producto.id], fecha: fechaActual));
+
+        batch.updateData(refProducto, {
+          'stock': stock,
+          'precioUnitario': precio,
+          'precioHistorico': producto.precioHistorico,
+          'stockHistorico': producto.stockHistorico
+        });
+      }
+    });
+
+    return batch.commit();
   }
 }
 

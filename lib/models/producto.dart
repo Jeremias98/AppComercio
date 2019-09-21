@@ -11,6 +11,7 @@ class Producto {
   num porcentajeGanancia;
   String descripcion;
   List<ValorTemporal> stockHistorico;
+  List<ValorTemporal> precioHistorico;
 
   Producto(
       {this.id,
@@ -20,7 +21,8 @@ class Producto {
       this.stock,
       this.porcentajeGanancia,
       this.descripcion,
-      this.stockHistorico});
+      this.stockHistorico,
+      this.precioHistorico});
 
   factory Producto.fromFirestore(DocumentSnapshot doc) {
     Map data = doc.data;
@@ -35,13 +37,21 @@ class Producto {
         descripcion: data['descripcion'] ?? '');
 
     producto.stockHistorico = new List<ValorTemporal>();
+    producto.precioHistorico = new List<ValorTemporal>();
 
-    List<dynamic> stockHistoricoFirebase = data['stockHistorico'] ?? null;
+    List<dynamic> stockHistoricoFirebase = data['stockHistorico'] ?? [];
+    List<dynamic> precioHistoricoFirebase = data['precioHistorico'] ?? [];
 
     stockHistoricoFirebase.forEach((sh) {
       ValorTemporal valorTemporal =
           new ValorTemporal(fecha: sh['fecha'], valor: sh['valor']);
       producto.stockHistorico.add(valorTemporal);
+    });
+
+    precioHistoricoFirebase.forEach((vh) {
+      ValorTemporal valorTemporal =
+          new ValorTemporal(fecha: vh['fecha'], valor: vh['valor']);
+      producto.precioHistorico.add(valorTemporal);
     });
 
     return producto;
@@ -71,10 +81,27 @@ class Producto {
     return this.precioUnitario;
   }
 
-  Widget obtenerTextStock() {
-    if (stock == 0) {
-      return Text('Sin stock', style: TextStyle(color: Colors.red));
+  ValorTemporal obtenerUltimoStock() {
+    if (this.stockHistorico == null || this.stockHistorico.length == 0) {
+      return null;
     }
-    return Text(stock.toString() + ' en stock');
+
+    return this.stockHistorico[this.stockHistorico.length - 1];
+  }
+
+  ValorTemporal obtenerUltimoPrecio() {
+    if (this.precioHistorico == null || this.precioHistorico.length == 0) {
+      return null;
+    }
+
+    return this.precioHistorico[this.precioHistorico.length - 1];
+  }
+
+  Widget obtenerTextStock() {
+    return Text(obtenerStringStock(), style: TextStyle(color: stock == 0 ? Colors.red : Colors.grey));
+  }
+
+  obtenerStringStock() {
+    return (stock == 0) ? "Sin stock" : stock.toString() + " en stock";
   }
 }
