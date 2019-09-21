@@ -153,15 +153,38 @@ void main() {
       expect(transaccion.pertenece(producto1), true);
       expect(transaccion.pertenece(producto2), true);
 
-      transaccion.quitar(producto1);
+      transaccion.quitarDelCarrito(producto1);
       expect(transaccion.pertenece(producto1), false);
       expect(transaccion.obtenerUnidades(producto1), 0);
       expect(transaccion.obtenerProductos().length, 1);
 
-      transaccion.quitar(producto2);
+      transaccion.quitarDelCarrito(producto2);
       expect(transaccion.pertenece(producto2), false);
       expect(transaccion.obtenerUnidades(producto2), 0);
       expect(transaccion.obtenerProductos().length, 0);
+    });
+
+    test(
+        'Quitar unidades deberia restar de a uno',
+        () {
+      final Carrito transaccion = new Carrito();
+
+      final Producto producto1 = new Producto(id: "1");
+      transaccion.agregar(producto1);
+      transaccion.agregar(producto1);
+      transaccion.agregar(producto1);
+
+      transaccion.quitar(producto1);
+      expect(transaccion.pertenece(producto1), true);
+      expect(transaccion.obtenerUnidades(producto1), 2);
+
+      transaccion.quitar(producto1);
+      expect(transaccion.pertenece(producto1), true);
+      expect(transaccion.obtenerUnidades(producto1), 1);
+
+      transaccion.quitar(producto1);
+      expect(transaccion.pertenece(producto1), false);
+
     });
 
     test('Limpiar el carrito deja en 0 la cantidad de productos y sus unidades',

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:vivero/models/producto.dart';
-import 'package:vivero/models/valor_temporal.dart';
 import 'package:vivero/services/productos_service.dart';
 import 'package:intl/intl.dart';
 
@@ -26,12 +25,6 @@ class _RenovarStockPreciosView extends State<RenovarStockPreciosView> {
       TextEditingController porcentajeController = TextEditingController();
       TextEditingController stockController = TextEditingController();
 
-      producto.stockHistorico.add(new ValorTemporal());
-      producto.stockHistorico[producto.stockHistorico.length - 1].fecha =
-          DateTime.now();
-      producto.stockHistorico[producto.stockHistorico.length - 1].valor = null;
-
-      // precioCostoController.text = producto.precioUnitario.toString();
       porcentajeController.text = producto.porcentajeGanancia.toString();
 
       if (nuevoStock[producto.id] != null)
@@ -157,30 +150,62 @@ class _RenovarStockPreciosView extends State<RenovarStockPreciosView> {
       ));
     }
 
-    Widget pantallaFinal(List<Producto> productos) {
-      return ListView.separated(
-          scrollDirection: Axis.vertical,
-          separatorBuilder: (context, index) {
-            return Divider();
+    Widget botonGuardar(List<Producto> productos) {
+      return Container(
+        width: MediaQuery.of(context).size.width,
+        padding: EdgeInsets.all(14.0),
+        child: GestureDetector(
+          onTap: () {
+            productosService
+                .renovarStockYPrecios(productos, nuevoStock, nuevoPrecio)
+                .whenComplete(() {
+              Navigator.pop(context);
+            });
           },
-          itemCount: productos.length,
-          itemBuilder: (context, index) {
-            final Producto producto = productos[index];
+          child: Container(
+              alignment: Alignment.center,
+              padding: EdgeInsets.all(12.0),
+              decoration: BoxDecoration(
+                color: Colors.deepPurpleAccent,
+                borderRadius: BorderRadius.circular(2.0),
+              ),
+              child: Text("GUARDAR", style: TextStyle(color: Colors.white))),
+        ),
+      );
+    }
 
-            return ListTile(
-                onTap: () {},
-                onLongPress: () {},
-                leading: CircleAvatar(
-                  backgroundImage: NetworkImage(producto.fotoUrl),
-                ),
-                title: Text(producto.nombre.toString()),
-                subtitle: nuevoStock[producto.id] != null
-                    ? Text(
-                        "+" + nuevoStock[producto.id].toString() + " unidades")
-                    : Text("Sin cambios"), //producto.obtenerTextStock(),
-                trailing:
-                    Text('\$' + producto.obtenerPrecioVenta().toString()));
-          });
+    Widget pantallaFinal(List<Producto> productos) {
+      return Column(
+        children: <Widget>[
+          Expanded(
+            child: ListView.separated(
+                scrollDirection: Axis.vertical,
+                separatorBuilder: (context, index) {
+                  return Divider();
+                },
+                itemCount: productos.length,
+                itemBuilder: (context, index) {
+                  final Producto producto = productos[index];
+
+                  return ListTile(
+                      onTap: () {},
+                      onLongPress: () {},
+                      leading: CircleAvatar(
+                        backgroundImage: NetworkImage(producto.fotoUrl),
+                      ),
+                      title: Text(producto.nombre.toString()),
+                      subtitle: nuevoStock[producto.id] != null
+                          ? Text("+" +
+                              nuevoStock[producto.id].toString() +
+                              " unidades")
+                          : Text("Sin cambios"), //producto.obtenerTextStock(),
+                      trailing: Text(
+                          '\$' + producto.obtenerPrecioVenta().toString()));
+                }),
+          ),
+          botonGuardar(productos)
+        ],
+      );
     }
 
     return new Scaffold(

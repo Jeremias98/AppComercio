@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:vivero/clases/carrito.dart';
 import 'package:vivero/models/producto.dart';
@@ -55,6 +56,15 @@ class ProductosService {
 
   Future<void> renovarStockYPrecios(List<Producto> productos,
       Map<String, num> nuevoStock, Map<String, num> nuevoPrecio) async {
+    if (productos == null || productos.length == 0) return null;
+
+    try {
+
+    }
+    on PlatformException {
+       
+    }
+
     var batch = _db.batch();
 
     productos.forEach((producto) {
@@ -70,7 +80,7 @@ class ProductosService {
             ? nuevoPrecio[producto.id]
             : producto.precioUnitario;
 
-        var fechaActual = DateTime.now();
+        DateTime fechaActual = DateTime.now();
 
         if (nuevoStock[producto.id] != null)
           producto.stockHistorico.add(new ValorTemporal(
@@ -80,12 +90,21 @@ class ProductosService {
           producto.precioHistorico.add(new ValorTemporal(
               valor: nuevoPrecio[producto.id], fecha: fechaActual));
 
-        batch.updateData(refProducto, {
-          'stock': stock,
-          'precioUnitario': precio,
-          'precioHistorico': producto.precioHistorico,
-          'stockHistorico': producto.stockHistorico
-        });
+        List<dynamic> nuevosStock =
+            producto.obtenerHistoricoParaGuardar(producto.stockHistorico);
+
+        List<dynamic> nuevosPrecios =
+            producto.obtenerHistoricoParaGuardar(producto.precioHistorico);
+
+        Map<String, dynamic> update = new Map<String, dynamic>();
+        update['stock'] = stock;
+        update['precioUnitario'] = precio;
+        if (nuevosPrecios != null && nuevosPrecios.length > 0)
+          update['precioHistorico'] = nuevosPrecios;
+        if (nuevosStock != null && nuevosStock.length > 0)
+          update['stockHistorico'] = nuevosStock;
+
+        batch.updateData(refProducto, update);
       }
     });
 

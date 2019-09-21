@@ -69,6 +69,19 @@ class Producto {
         descripcion: data['descripcion'] ?? '');
   }
 
+  List<Map<String, dynamic>> obtenerHistoricoParaGuardar(
+      List<ValorTemporal> historico) {
+    if (historico == null) return null;
+
+    List<Map<String, dynamic>> lista = new List();
+
+    historico.forEach((h) {
+      lista.add(h.toMap());
+    });
+
+    return lista;
+  }
+
   num obtenerGanancia() {
     return (this.precioUnitario * this.porcentajeGanancia) / 100;
   }
@@ -98,7 +111,8 @@ class Producto {
   }
 
   Widget obtenerTextStock() {
-    return Text(obtenerStringStock(), style: TextStyle(color: stock == 0 ? Colors.red : Colors.grey));
+    return Text(obtenerStringStock(),
+        style: TextStyle(color: stock == 0 ? Colors.red : Colors.grey));
   }
 
   obtenerStringStock() {

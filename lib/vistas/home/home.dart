@@ -104,8 +104,8 @@ class _HomeScreen extends State<HomeScreen> {
 
   Widget barraInferior() {
     return BottomNavigationBar(
-      // showSelectedLabels: false,
-      // showUnselectedLabels: false,
+      showSelectedLabels: false,
+      showUnselectedLabels: false,
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: Icon(Icons.shopping_cart),

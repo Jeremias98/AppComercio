@@ -41,7 +41,7 @@ class _ListaProductosView extends State<ListaProductosView> {
         if (!productosService.carrito.pertenece(producto)) {
           productosService.carrito.agregar(producto);
         } else {
-          productosService.carrito.quitar(producto);
+          productosService.carrito.quitarDelCarrito(producto);
         }
 
         if (productosService.carrito.estaVacio())

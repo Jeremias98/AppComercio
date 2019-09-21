@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vivero/models/producto.dart';
 import 'package:vivero/services/transaccionService.dart';
+import 'package:vivero/widgets/producto_detalle.dart';
 
 class DetalleView extends StatefulWidget {
   final Producto producto;
@@ -16,63 +17,35 @@ class _DetalleView extends State<DetalleView> {
     children: <Widget>[Text("Descripcion del producto")],
   );
 
+  obtenerFABQuitar(Producto producto) {
+    return FloatingActionButton.extended(
+        icon: Icon(Icons.remove_shopping_cart),
+        backgroundColor: Colors.black,
+        onPressed: () {
+          quitarDelCarrito(producto);
+        },
+        label: new Text('QUITAR DEL CARRITO'));
+  }
+
   Widget build(BuildContext context) {
     return new Scaffold(
-      backgroundColor: Colors.white,
-      appBar: new AppBar(
-        leading: new IconButton(
-          icon: new Icon(Icons.close, color: Colors.black),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
+        floatingActionButton: obtenerFABQuitar(widget.producto),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         backgroundColor: Colors.white,
-        title: new Text(widget.producto.nombre,
-            style: TextStyle(color: Colors.black)),
-      ),
-      body: Column(
-        children: <Widget>[
-          Image.network(widget.producto.fotoUrl),
-          ListTile(
-              title: Text(widget.producto.nombre.toString()),
-              subtitle: Text(widget.producto.stock.toString() + ' en stock'),
-              trailing: Text(
-                '\$' + widget.producto.obtenerPrecioVenta().toString(),
-                style: new TextStyle(
-                  fontSize: 20.0,
-                  color: Colors.grey,
-                ),
-              )),
-          Expanded(
-            child: listView,
+        appBar: new AppBar(
+          leading: new IconButton(
+            icon: new Icon(Icons.close, color: Colors.black),
+            onPressed: () => Navigator.of(context).pop(),
           ),
-          Container(
-            width: MediaQuery.of(context).size.width,
-            padding: EdgeInsets.all(14.0),
-            child: GestureDetector(
-              onTap: () {
-                quitarDelCarrito(widget.producto);
-              },
-              child: Container(
-                alignment: Alignment.center,
-                padding: EdgeInsets.all(12.0),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(2.0),
-                    border: Border.all(
-                        color: Colors.grey, style: BorderStyle.solid)),
-                child: Text(
-                  'QUITAR DEL CARRITO',
-                  style: TextStyle(color: Colors.black),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+          backgroundColor: Colors.white,
+          title: new Text("Detalle del producto",
+              style: TextStyle(color: Colors.black)),
+        ),
+        body: ProductoDetalleWidget(producto: widget.producto));
   }
 
   quitarDelCarrito(Producto producto) {
-    transaccionService.quitar(producto);
+    transaccionService.quitarDelCarrito(producto);
     Navigator.of(context).pop();
   }
 }

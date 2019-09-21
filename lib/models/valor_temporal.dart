@@ -10,7 +10,13 @@ class ValorTemporal {
     Map data = doc.data;
 
     return ValorTemporal(
-        valor: data['valor'] ?? null,
-        fecha: data['fecha'] ?? DateTime.now());
+        valor: data['valor'] ?? null, fecha: data['fecha'] ?? DateTime.now());
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'fecha': fecha,
+      'valor': valor,
+    };
   }
 }

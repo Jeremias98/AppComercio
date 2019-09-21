@@ -18,15 +18,25 @@ class Carrito {
   }
 
   void agregarPorCantidad(Producto producto, num cantidad) {
+    if (cantidad < 1) return;
     for (num i = 1; i <= cantidad; i++) {
       agregar(producto);
     }
   }
 
-  void quitar(Producto producto) {
+  void quitarDelCarrito(Producto producto) {
     if (!pertenece(producto)) return;
     this.productos.removeWhere((p) => p.id == producto.id);
     _map.remove(producto.id);
+  }
+
+  void quitar(Producto producto) {
+    if (_map.containsKey(producto.id)) {
+      if (_map[producto.id] == 1)
+        quitarDelCarrito(producto);
+      else
+        _map[producto.id] = _map[producto.id] - 1;
+    }
   }
 
   void limpiar() {
