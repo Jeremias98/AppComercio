@@ -16,7 +16,7 @@ class _ProductoDetalleWidget extends State<ProductoDetalleWidget> {
   Widget portada(Producto producto, BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: 210.0,
+      height: 190.0,
       alignment: Alignment(-1, 1),
       decoration: new BoxDecoration(
           image: new DecorationImage(
@@ -28,7 +28,7 @@ class _ProductoDetalleWidget extends State<ProductoDetalleWidget> {
     return ListTile(
         title: Text(
           producto.nombre ?? '',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
         ),
         subtitle: producto.obtenerTextStock(),
         trailing: Text(
@@ -44,7 +44,7 @@ class _ProductoDetalleWidget extends State<ProductoDetalleWidget> {
     return ExpansionTile(
       title: Text(
         "MOSTRAR DETALLES",
-        style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+        style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
       ),
       children: <Widget>[
         ListTile(
@@ -81,6 +81,18 @@ class _ProductoDetalleWidget extends State<ProductoDetalleWidget> {
     );
   }
 
+  Widget subtitulo(String titulo) {
+    return Container(
+      alignment: Alignment.centerLeft,
+      padding: EdgeInsets.all(15),
+      child: Text(
+        titulo,
+        style: TextStyle(
+            color: Colors.black87, fontWeight: FontWeight.w600, fontSize: 16),
+      ),
+    );
+  }
+
   Widget build(BuildContext context) {
     return SingleChildScrollView(
         child: Column(
@@ -93,10 +105,13 @@ class _ProductoDetalleWidget extends State<ProductoDetalleWidget> {
           children: <Widget>[
             filaDatosPrincipales(widget.producto),
             descripcion(widget.producto),
-            Divider(),
-            ContadorUnidadesWidget(producto: widget.producto),
-            Divider(),
             detallesProducto(widget.producto),
+            Divider(),
+            subtitulo("Unidades en carrito"),
+            ContadorUnidadesWidget(producto: widget.producto),
+            Container(
+              height: 100,
+            )
             // formularioPreciosYStock(producto)
           ],
         )

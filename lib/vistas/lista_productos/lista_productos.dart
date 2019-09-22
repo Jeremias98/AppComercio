@@ -4,6 +4,7 @@ import 'package:vivero/models/producto.dart';
 import 'package:vivero/services/menu_contextual_service.dart';
 import 'package:vivero/services/productos_service.dart';
 import 'package:vivero/vistas/agregar_producto/agregar_producto.dart';
+import 'package:vivero/vistas/detalle/detalle.dart';
 
 class ListaProductosView extends StatefulWidget {
   @override
@@ -29,7 +30,7 @@ class _ListaProductosView extends State<ListaProductosView> {
             alignment: Alignment.center,
             padding: EdgeInsets.all(12.0),
             decoration: BoxDecoration(
-              color: Colors.deepPurpleAccent,
+              color: productosService.carrito.estaVacio() ? Colors.deepPurpleAccent : Colors.black,
               borderRadius: BorderRadius.circular(2.0),
             ),
             child: textoCarrito()),
@@ -121,7 +122,7 @@ class _ListaProductosView extends State<ListaProductosView> {
           context,
           new MaterialPageRoute(
               builder: (BuildContext context) =>
-                  new AgregarProductoScreen(producto: producto)));
+                  new AgregarProductoScreen()));
     } else {
       setState(() {
         productosService.carrito.limpiar();

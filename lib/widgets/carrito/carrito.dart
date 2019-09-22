@@ -65,7 +65,9 @@ class _CarritoWidget extends State<CarritoWidget> {
             ),
             shape: Border.all(
                 color: Colors.deepPurpleAccent, style: BorderStyle.solid),
-            onPressed: () {navegarResumen(context);},
+            onPressed: () {
+              navegarResumen(context);
+            },
           ),
         ),
         Expanded(

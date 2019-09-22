@@ -164,9 +164,7 @@ void main() {
       expect(transaccion.obtenerProductos().length, 0);
     });
 
-    test(
-        'Quitar unidades deberia restar de a uno',
-        () {
+    test('Quitar unidades deberia restar de a uno', () {
       final Carrito transaccion = new Carrito();
 
       final Producto producto1 = new Producto(id: "1");
@@ -184,7 +182,6 @@ void main() {
 
       transaccion.quitar(producto1);
       expect(transaccion.pertenece(producto1), false);
-
     });
 
     test('Limpiar el carrito deja en 0 la cantidad de productos y sus unidades',

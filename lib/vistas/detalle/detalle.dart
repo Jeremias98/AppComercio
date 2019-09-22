@@ -27,9 +27,28 @@ class _DetalleView extends State<DetalleView> {
         label: new Text('QUITAR DEL CARRITO'));
   }
 
+  obtenerFABAgregar(Producto producto) {
+    return FloatingActionButton.extended(
+        icon: Icon(Icons.add_shopping_cart),
+        backgroundColor: Colors.deepPurple,
+        onPressed: () {
+          setState(() {
+            transaccionService.agregar(producto);
+          });
+        },
+        label: new Text('AGREGAR AL CARRITO'));
+  }
+
+  obtenerFAB(Producto producto) {
+    return transaccionService.pertenece(producto)
+        ? obtenerFABQuitar(producto)
+        : obtenerFABAgregar(producto);
+  }
+
   Widget build(BuildContext context) {
+    final bool mostrarFAB = MediaQuery.of(context).viewInsets.bottom == 0.0;
     return new Scaffold(
-        floatingActionButton: obtenerFABQuitar(widget.producto),
+        floatingActionButton: mostrarFAB ? obtenerFAB(widget.producto) : null,
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         backgroundColor: Colors.white,
         appBar: new AppBar(
